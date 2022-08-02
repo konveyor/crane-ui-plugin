@@ -32,7 +32,7 @@ export const useImportWizardFormState = () => {
     .required()
     .test('is-not-validating', (_value, context) => {
       if (sourceApiRootQuery.isLoading) {
-        return context.createError({ message: 'Cannot connect using these credentials' });
+        return context.createError();
       }
       return true;
     })
@@ -147,7 +147,11 @@ export const useImportWizardFormState = () => {
         sourceApiSecret: sourceApiSecretField,
       },
       {
-        revalidateOnChange: [credentialsAreValid, validateSourceNamespaceQuery.data],
+        revalidateOnChange: [
+          credentialsAreValid,
+          validateSourceNamespaceQuery.data,
+          sourceApiRootQuery.status,
+        ],
       },
     ),
     pvcSelect: useFormState({
