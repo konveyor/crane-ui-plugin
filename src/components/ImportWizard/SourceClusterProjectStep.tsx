@@ -19,6 +19,7 @@ import {
   useSourceApiRootQuery,
   useValidateSourceNamespaceQuery,
 } from 'src/api/queries/sourceResources';
+import { areSourceCredentialsValid } from 'src/api/proxyHelpers';
 import { useValidatedNamespace } from 'src/common/hooks/useValidatedNamespace';
 
 export const SourceClusterProjectStep: React.FunctionComponent = () => {
@@ -50,6 +51,13 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
   const credentialsValidating =
     configureSourceSecretMutation.isLoading || sourceApiRootQuery.isLoading;
 
+  const credentialsAreValid = areSourceCredentialsValid(
+    form.fields.apiUrl,
+    form.fields.token,
+    form.fields.sourceApiSecret,
+    sourceApiRootQuery,
+  );
+
   const validateSourceNamespaceQuery = useValidateSourceNamespaceQuery(
     form.values.sourceApiSecret,
     form.values.sourceNamespace,
@@ -59,13 +67,13 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
   // Override validation styles based on connection check.
   // Can't use greenWhenValid prop of ValidatedTextInput because fields can be valid before connection test passes.
   // This way we don't show the connection failed message when you just haven't finished entering credentials.
+  // The `validated: 'error'` case is handled in ValidatedTextInput based on the field schema.
   type validationFieldPropsType = {
     validating: boolean;
     valid: boolean;
     helperText?: React.ReactNode;
     labelIcon?: React.ReactElement;
   };
-
   const getAsyncValidationFieldProps = ({
     valid,
     validating,
@@ -86,7 +94,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const apiUrlFieldProps = getAsyncValidationFieldProps({
     validating: credentialsValidating,
-    valid: form.fields.apiUrl.isValid,
+    valid: credentialsAreValid,
     labelIcon: (
       <Popover
         headerContent={`API URL of the source cluster`}
@@ -112,7 +120,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const sourceTokenFieldProps = getAsyncValidationFieldProps({
     validating: credentialsValidating,
-    valid: form.fields.token.isValid,
+    valid: credentialsAreValid,
     labelIcon: (
       <Popover
         headerContent={`OAuth token of the source cluster`}
