@@ -32,7 +32,7 @@ export const useImportWizardFormState = () => {
     .required()
     .test('is-not-validating', (_value, context) => {
       if (sourceApiRootQuery.isLoading) {
-        return context.createError();
+        return context.createError({ message: 'Cannot connect using these credentials' });
       }
       return true;
     })

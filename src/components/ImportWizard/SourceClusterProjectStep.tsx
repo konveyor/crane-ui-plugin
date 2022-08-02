@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isWebUri } from 'valid-url';
 import {
   TextContent,
   Popover,
@@ -38,7 +39,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const configureSourceSecret = () => {
     const { apiUrl, token } = form.fields;
-    if ((apiUrl.isDirty || token.isDirty) && apiUrl.value && token.value) {
+    if ((apiUrl.isDirty || token.isDirty) && apiUrl.value && token.value && isApiUrlValidFormat) {
       configureSourceSecretMutation.mutate({ apiUrl: apiUrl.value, token: token.value });
     }
   };
@@ -48,8 +49,10 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
     !configureSourceSecretMutation.isLoading,
   );
 
+  const isApiUrlValidFormat = !!isWebUri(form.fields.apiUrl.value);
   const credentialsValidating =
-    configureSourceSecretMutation.isLoading || sourceApiRootQuery.isLoading;
+    isApiUrlValidFormat &&
+    (configureSourceSecretMutation.isLoading || sourceApiRootQuery.isLoading);
 
   const credentialsAreValid = areSourceCredentialsValid(
     form.fields.apiUrl,
@@ -197,16 +200,18 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
           // isTouched is already automatically set to true on blur
           {...sourceNamespaceFieldProps}
         />
-        <ResolvedQueries
-          spinnerMode="none"
-          resultsWithErrorTitles={[
-            {
-              result: configureSourceSecretMutation,
-              errorTitle: 'Cannot configure crane-reverse-proxy',
-            },
-            { result: sourceApiRootQuery, errorTitle: 'Cannot load cluster API versions' },
-          ]}
-        />
+        {isApiUrlValidFormat ? (
+          <ResolvedQueries
+            spinnerMode="none"
+            resultsWithErrorTitles={[
+              {
+                result: configureSourceSecretMutation,
+                errorTitle: 'Cannot configure crane-reverse-proxy',
+              },
+              { result: sourceApiRootQuery, errorTitle: 'Cannot load cluster API versions' },
+            ]}
+          />
+        ) : null}
       </Form>
       {form.isValid ? (
         <Alert
