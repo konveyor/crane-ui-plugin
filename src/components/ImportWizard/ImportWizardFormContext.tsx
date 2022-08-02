@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as yup from 'yup';
+import { isWebUri } from 'valid-url';
 import { useFormField, useFormState } from '@konveyor/lib-ui';
 import { OAuthSecret } from 'src/api/types/Secret';
 import { PersistentVolumeClaim } from 'src/api/types/PersistentVolume';
@@ -45,6 +46,11 @@ export const useImportWizardFormState = () => {
       }
       return true;
     });
+  const apiUrlSchema = credentialsFieldSchema.test(
+    'valid-url',
+    ({ label }) => `${label} must be a valid URL`,
+    (value) => !!value && !!isWebUri(value),
+  );
 
   const resetSourceSelections = () => {
     // If the source cluster/project is changing, reset everything the user has selected based on data from the source.
@@ -52,7 +58,7 @@ export const useImportWizardFormState = () => {
     forms.pvcEdit.clear();
   };
 
-  const apiUrlField = useFormField('', credentialsFieldSchema.label('Cluster API URL'), {
+  const apiUrlField = useFormField('', apiUrlSchema.label('Cluster API URL'), {
     onChange: resetSourceSelections,
   });
   const tokenField = useFormField('', credentialsFieldSchema.label('OAuth token'), {
