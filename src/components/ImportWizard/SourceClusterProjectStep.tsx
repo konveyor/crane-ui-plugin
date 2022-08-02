@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isWebUri } from 'valid-url';
 import {
   TextContent,
   Popover,
@@ -19,6 +20,7 @@ import {
   useSourceApiRootQuery,
   useValidateSourceNamespaceQuery,
 } from 'src/api/queries/sourceResources';
+import { areSourceCredentialsValid } from 'src/api/proxyHelpers';
 import { useValidatedNamespace } from 'src/common/hooks/useValidatedNamespace';
 
 export const SourceClusterProjectStep: React.FunctionComponent = () => {
@@ -37,7 +39,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const configureSourceSecret = () => {
     const { apiUrl, token } = form.fields;
-    if ((apiUrl.isDirty || token.isDirty) && apiUrl.value && token.value) {
+    if ((apiUrl.isDirty || token.isDirty) && apiUrl.value && token.value && isApiUrlValidFormat) {
       configureSourceSecretMutation.mutate({ apiUrl: apiUrl.value, token: token.value });
     }
   };
@@ -47,8 +49,17 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
     !configureSourceSecretMutation.isLoading,
   );
 
+  const isApiUrlValidFormat = !!isWebUri(form.fields.apiUrl.value);
   const credentialsValidating =
-    configureSourceSecretMutation.isLoading || sourceApiRootQuery.isLoading;
+    isApiUrlValidFormat &&
+    (configureSourceSecretMutation.isLoading || sourceApiRootQuery.isLoading);
+
+  const credentialsAreValid = areSourceCredentialsValid(
+    form.fields.apiUrl,
+    form.fields.token,
+    form.fields.sourceApiSecret,
+    sourceApiRootQuery,
+  );
 
   const validateSourceNamespaceQuery = useValidateSourceNamespaceQuery(
     form.values.sourceApiSecret,
@@ -59,13 +70,13 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
   // Override validation styles based on connection check.
   // Can't use greenWhenValid prop of ValidatedTextInput because fields can be valid before connection test passes.
   // This way we don't show the connection failed message when you just haven't finished entering credentials.
+  // The `validated: 'error'` case is handled in ValidatedTextInput based on the field schema.
   type validationFieldPropsType = {
     validating: boolean;
     valid: boolean;
     helperText?: React.ReactNode;
     labelIcon?: React.ReactElement;
   };
-
   const getAsyncValidationFieldProps = ({
     valid,
     validating,
@@ -86,7 +97,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const apiUrlFieldProps = getAsyncValidationFieldProps({
     validating: credentialsValidating,
-    valid: form.fields.apiUrl.isValid,
+    valid: credentialsAreValid,
     labelIcon: (
       <Popover
         headerContent={`API URL of the source cluster`}
@@ -112,7 +123,7 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
 
   const sourceTokenFieldProps = getAsyncValidationFieldProps({
     validating: credentialsValidating,
-    valid: form.fields.token.isValid,
+    valid: credentialsAreValid,
     labelIcon: (
       <Popover
         headerContent={`OAuth token of the source cluster`}
@@ -189,16 +200,18 @@ export const SourceClusterProjectStep: React.FunctionComponent = () => {
           // isTouched is already automatically set to true on blur
           {...sourceNamespaceFieldProps}
         />
-        <ResolvedQueries
-          spinnerMode="none"
-          resultsWithErrorTitles={[
-            {
-              result: configureSourceSecretMutation,
-              errorTitle: 'Cannot configure crane-reverse-proxy',
-            },
-            { result: sourceApiRootQuery, errorTitle: 'Cannot load cluster API versions' },
-          ]}
-        />
+        {isApiUrlValidFormat ? (
+          <ResolvedQueries
+            spinnerMode="none"
+            resultsWithErrorTitles={[
+              {
+                result: configureSourceSecretMutation,
+                errorTitle: 'Cannot configure crane-reverse-proxy',
+              },
+              { result: sourceApiRootQuery, errorTitle: 'Cannot load cluster API versions' },
+            ]}
+          />
+        ) : null}
       </Form>
       {form.isValid ? (
         <Alert
