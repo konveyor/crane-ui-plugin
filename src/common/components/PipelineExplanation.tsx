@@ -18,8 +18,8 @@ export const PipelineExplanation: React.FunctionComponent<PipelineExplanationPro
       <TextContent>
         <Text component="p">
           {hasVisualization
-            ? 'This shows the pipeline tasks for the stage phase of an import. During the stage phase:'
-            : 'During the stage phase of an import:'}
+            ? 'This shows the pipeline tasks for the stage phase. During the stage phase:'
+            : 'During the stage phase:'}
         </Text>
         <TextList>
           <TextListItem>PVC data is synchronized into the active project.</TextListItem>
@@ -28,8 +28,8 @@ export const PipelineExplanation: React.FunctionComponent<PipelineExplanationPro
           </TextListItem>
         </TextList>
         <Text component="p">
-          The stage pipeline can be re-run multiple times to lower the downtime of a subsequent
-          cutover import.
+          The stage pipeline can be re-run multiple times to reduce the downtime of a subsequent
+          application cutover.
         </Text>
       </TextContent>
     );
@@ -39,8 +39,8 @@ export const PipelineExplanation: React.FunctionComponent<PipelineExplanationPro
       <TextContent>
         <Text component="p">
           {hasVisualization
-            ? 'This shows the pipeline tasks for the cutover phase of an import. During the cutover phase:'
-            : 'During the cutover phase of an import:'}
+            ? 'This shows the pipeline tasks for the cutover phase. During the cutover phase:'
+            : 'During the cutover phase:'}
         </Text>
         <TextList>
           <TextListItem>All applications on the source namespace are halted.</TextListItem>
@@ -49,9 +49,6 @@ export const PipelineExplanation: React.FunctionComponent<PipelineExplanationPro
           ) : null}
           <TextListItem>Workloads are migrated into the active project.</TextListItem>
         </TextList>
-        {isStatefulMigration ? (
-          <Text component="p">The cutover pipeline is the final step in a migration project.</Text>
-        ) : null}
       </TextContent>
     );
   }

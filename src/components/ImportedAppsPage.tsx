@@ -29,15 +29,15 @@ import {
 } from 'src/api/queries/pipelines';
 import { watchErrorToString } from 'src/utils/helpers';
 import {
-  appImportsAllNamespacesUrl,
-  appImportsPageUrl,
+  importedAppsAllNamespacesUrl,
+  importedAppsPageUrl,
   appImportWizardUrl,
   projectDetailsAllNamespacesUrl,
 } from 'src/utils/paths';
 
-import { PipelineGroupHeader } from './AppImports/PipelineGroupHeader';
-import { PipelineGroupSummary } from './AppImports/PipelineGroupSummary';
-import { PipelineGroupHistoryTable } from './AppImports/PipelineGroupHistoryTable';
+import { PipelineGroupHeader } from './ImportedApps/PipelineGroupHeader';
+import { PipelineGroupSummary } from './ImportedApps/PipelineGroupSummary';
+import { PipelineGroupHistoryTable } from './ImportedApps/PipelineGroupHistoryTable';
 import { NoProjectEmptyState } from 'src/common/components/NoProjectEmptyState';
 import { LoadingEmptyState } from 'src/common/components/LoadingEmptyState';
 import {
@@ -47,39 +47,39 @@ import {
 
 const queryClient = new QueryClient();
 
-const AppImportsPageWrapper: React.FunctionComponent = () => {
+const ImportedAppsPageWrapper: React.FunctionComponent = () => {
   const {
     params: { pipelineGroupName: activePipelineGroupName },
   } = useRouteMatch<{ pipelineGroupName: string }>();
   return (
     <>
       <Helmet>
-        <title>Application Imports</title>
+        <title>Imported Applications</title>
       </Helmet>
       <QueryClientProvider client={queryClient}>
-        <AppImportsPage activePipelineGroupName={activePipelineGroupName} />
+        <ImportedAppsPage activePipelineGroupName={activePipelineGroupName} />
       </QueryClientProvider>
     </>
   );
 };
 
-interface AppImportsPageProps {
+interface ImportedAppsPageProps {
   activePipelineGroupName: string;
 }
 
-const AppImportsPage: React.FunctionComponent<AppImportsPageProps> = ({
+const ImportedAppsPage: React.FunctionComponent<ImportedAppsPageProps> = ({
   activePipelineGroupName,
 }) => {
   const history = useHistory();
   const { pipelineGroups, loaded: pipelineGroupsLoaded, error } = useWatchCranePipelineGroups();
   const { namespace, isValidatingNamespace, isAllNamespaces } = useValidatedNamespace();
-  useRedirectOnInvalidNamespaceEffect(appImportsAllNamespacesUrl);
+  useRedirectOnInvalidNamespaceEffect(importedAppsAllNamespacesUrl);
 
   const isLoaded = pipelineGroupsLoaded && !isValidatingNamespace;
 
   const setActivePipelineGroupName = React.useCallback(
     (name: string, op: 'push' | 'replace' = 'push') =>
-      history[op](appImportsPageUrl(namespace, name)),
+      history[op](importedAppsPageUrl(namespace, name)),
     [history, namespace],
   );
 
@@ -118,7 +118,7 @@ const AppImportsPage: React.FunctionComponent<AppImportsPageProps> = ({
       !activePipelineGroup
     ) {
       deletePipelineMutation.reset();
-      history.replace(appImportsPageUrl(namespace));
+      history.replace(importedAppsPageUrl(namespace));
     }
   }, [activePipelineGroupName, activePipelineGroup, deletePipelineMutation, history, namespace]);
 
@@ -130,8 +130,8 @@ const AppImportsPage: React.FunctionComponent<AppImportsPageProps> = ({
       <PageSection variant="light">
         <Level>
           <TextContent>
-            <Title headingLevel="h1">Application Imports</Title>
-            <Text>View status and take actions on your application import pipelines.</Text>
+            <Title headingLevel="h1">Imported Applications</Title>
+            <Text>View status and take actions on your pipeline groups.</Text>
           </TextContent>
           {!isAllNamespaces && !isEmptyState ? (
             <Button variant="secondary" className={spacing.mxMd} onClick={goToImportWizard}>
@@ -154,7 +154,7 @@ const AppImportsPage: React.FunctionComponent<AppImportsPageProps> = ({
         <EmptyState variant="large" className={spacing.mtXl}>
           <EmptyStateIcon icon={PlusCircleIcon} />
           <Title headingLevel="h4" size="lg">
-            No application imports yet
+            No imported applications yet
           </Title>
           <Button variant="primary" onClick={goToImportWizard}>
             Start a new import
@@ -218,4 +218,4 @@ const AppImportsPage: React.FunctionComponent<AppImportsPageProps> = ({
   );
 };
 
-export default AppImportsPageWrapper;
+export default ImportedAppsPageWrapper;

@@ -51,7 +51,7 @@ export const PipelineGroupSummary: React.FunctionComponent<PipelineGroupSummaryP
               <PipelineRunStatus pipelineRun={latestPipelineRun} showAction />
             </Link>
           ) : (
-            'Not started'
+            'Not yet attempted'
           )}
         </DescriptionListDescription>
       </DescriptionListGroup>

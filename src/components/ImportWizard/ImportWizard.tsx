@@ -34,7 +34,7 @@ import { RouteGuard } from 'src/common/components/RouteGuard';
 import { useSourcePVCsQuery } from 'src/api/queries/sourceResources';
 import {
   addPageAllNamespacesUrl,
-  appImportsPageUrl,
+  importedAppsPageUrl,
   appImportWizardAllNamespacesUrl,
 } from 'src/utils/paths';
 import { ImportWizardWelcomeModal } from './ImportWizardWelcomeModal';
@@ -141,7 +141,7 @@ export const ImportWizard: React.FunctionComponent = () => {
     // On success, navigate to the app imports page!
     const newPipelineGroupName =
       newResources.cutoverPipeline.metadata.annotations?.['crane-ui-plugin.konveyor.io/group'];
-    history.push(appImportsPageUrl(namespace, newPipelineGroupName));
+    history.push(importedAppsPageUrl(namespace, newPipelineGroupName));
   });
 
   const onSubmitWizard = () => {

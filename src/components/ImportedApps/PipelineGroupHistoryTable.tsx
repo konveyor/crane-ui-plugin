@@ -22,12 +22,12 @@ export const PipelineGroupHistoryTable: React.FunctionComponent<PipelineGroupHis
   return (
     <>
       <Title headingLevel="h3" className={spacing.mbMd}>
-        Import pipeline history
+        History
       </Title>
       {pipelineGroup.pipelineRuns.nonPending.length === 0 ? (
         <EmptyState variant="small">
           <Title headingLevel="h4" size="md">
-            No import history yet
+            No history yet
           </Title>
           <EmptyStateBody>Stage and Cutover PipelineRun history will appear here.</EmptyStateBody>
         </EmptyState>
@@ -68,7 +68,7 @@ export const PipelineGroupHistoryTable: React.FunctionComponent<PipelineGroupHis
                   {pipelineRun.status?.startTime ? (
                     <Timestamp timestamp={pipelineRun.status?.startTime} />
                   ) : (
-                    'Not started'
+                    'Starting...'
                   )}
                 </Td>
                 <Td className="pf-m-truncate" dataLabel="Status" aria-labelledby="result-heading">

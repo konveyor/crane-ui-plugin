@@ -3,7 +3,7 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/app-imports/new/ns/:namespace", "/app-imports/new/all-namespaces"],
+      "path": ["/imported-apps/new/ns/:namespace", "/imported-apps/new/all-namespaces"],
       "component": { "$codeRef": "ImportPage" }
     }
   },
@@ -12,11 +12,11 @@
     "properties": {
       "exact": true,
       "path": [
-        "/app-imports/ns/:namespace",
-        "/app-imports/ns/:namespace/:pipelineGroupName",
-        "/app-imports/all-namespaces"
+        "/imported-apps/ns/:namespace",
+        "/imported-apps/ns/:namespace/:pipelineGroupName",
+        "/imported-apps/all-namespaces"
       ],
-      "component": { "$codeRef": "AppImportsPage" }
+      "component": { "$codeRef": "ImportedAppsPage" }
     }
   },
   {
@@ -26,8 +26,8 @@
       "perspective": "dev",
       "section": "resources",
       "insertAfter": "pipelines",
-      "name": "Application Imports",
-      "href": "/app-imports",
+      "name": "Imported Applications",
+      "href": "/imported-apps",
       "namespaced": true
     }
   },
@@ -44,9 +44,9 @@
     "properties": {
       "id": "import-application",
       "groupId": "import-application-group",
-      "label": "Import from cluster",
-      "description": "Import a manually deployed application on another cluster to an automated GitOps workflow.",
-      "href": "/app-imports/new/ns/:namespace",
+      "label": "Import from another cluster",
+      "description": "Create pipelines to import an existing application from another cluster",
+      "href": "/imported-apps/new/ns/:namespace",
       "icon": { "$codeRef": "icons.importIconElement" }
     }
   },
@@ -55,9 +55,9 @@
     "properties": {
       "id": "application-imports-add",
       "groupId": "import-application-group",
-      "label": "Application imports",
-      "description": "View imported applications.",
-      "href": "/app-imports/ns/:namespace",
+      "label": "Imported applications",
+      "description": "View status and take actions on import pipelines",
+      "href": "/imported-apps/ns/:namespace",
       "icon": { "$codeRef": "icons.applicationsIconElement" }
     }
   },

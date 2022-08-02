@@ -76,7 +76,9 @@ You'll need:
 
 3. Open the Console in your browser at http://localhost:9000/ and log in.
 
-4. Find our UI by using the Developer perspective and navigating to the Add page, and clicking our "Import application from cluster" card.
+4. Find our UI in the following locations on the OpenShift Console's Developer perspective:
+   - On the Add page, click one of the actions in the "Import Existing Application" card.
+   - In the left-side nav, click "Imported Applications".
 
 ## Docker image
 

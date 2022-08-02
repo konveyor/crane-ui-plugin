@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Modal, TextContent, Text, Checkbox } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { appImportsPageUrl, pipelinesListUrl } from 'src/utils/paths';
 import { useLocalStorage } from 'src/common/hooks/useLocalStorage';
 import { useValidatedNamespace } from 'src/common/hooks/useValidatedNamespace';
 
@@ -13,8 +11,8 @@ export const ImportWizardWelcomeModal: React.FunctionComponent = () => {
   const onClose = () => setIsOpen(false);
   return (
     <Modal
-      variant="small"
-      title="Import application from another cluster"
+      variant="medium"
+      title="Import existing application from another cluster"
       actions={[
         <Button key="confirm" variant="primary" onClick={onClose}>
           Get started
@@ -26,12 +24,11 @@ export const ImportWizardWelcomeModal: React.FunctionComponent = () => {
       <TextContent>
         <Text component="p">
           This wizard will generate OpenShift Pipelines and pre-populated PipelineRuns for importing
-          a manually deployed application on another cluster to an automated GitOps workflow.
+          an existing application on another cluster to the &quot;{namespace}&quot; project.
         </Text>
         <Text component="p">
-          The <Link to={appImportsPageUrl(namespace)}>Application Imports</Link> page can be used to
-          view status and take actions on these pipelines, and they can also be viewed in more
-          detail on the <Link to={pipelinesListUrl(namespace)}>Pipelines</Link> page.
+          The Imported Applications page can be used to view status and take actions on the
+          pipelines.
         </Text>
       </TextContent>
       <Checkbox

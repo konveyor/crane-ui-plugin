@@ -1,14 +1,14 @@
 import { pipelineRunGVK } from 'src/api/queries/pipelines';
 import { PipelineRunKind } from 'src/reused/pipelines-plugin/src/types';
 
-export const appImportWizardAllNamespacesUrl = '/app-imports/new/all-namespaces';
+export const appImportWizardAllNamespacesUrl = '/imported-apps/new/all-namespaces';
 
-export const appImportWizardUrl = (namespace: string) => `/app-imports/new/ns/${namespace}`;
+export const appImportWizardUrl = (namespace: string) => `/imported-apps/new/ns/${namespace}`;
 
-export const appImportsAllNamespacesUrl = '/app-imports/all-namespaces';
+export const importedAppsAllNamespacesUrl = '/imported-apps/all-namespaces';
 
-export const appImportsPageUrl = (namespace: string, pipelineGroupName?: string) =>
-  `/app-imports/ns/${namespace}${pipelineGroupName ? `/${pipelineGroupName}` : ''}`;
+export const importedAppsPageUrl = (namespace: string, pipelineGroupName?: string) =>
+  `/imported-apps/ns/${namespace}${pipelineGroupName ? `/${pipelineGroupName}` : ''}`;
 
 export const pipelineRunUrl = (namespace: string, pipelineRun: PipelineRunKind) => {
   const { group, version, kind } = pipelineRunGVK;
